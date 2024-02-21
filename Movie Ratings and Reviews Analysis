@@ -1,0 +1,93 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample Movie Data
+data = {
+    'MovieID': np.array([1, 2, 3, 4, 5 , 6 ]),
+    'Title': np.array(['RRR', '3 Idiots', 'Drama', 'KGF', 'Udaan' , 'Saaho' ,]),
+    'Genre': np.array(['Action', 'Comedy', 'Drama', 'Action', 'Drama' , 'Action'  ]),
+    'Rating': np.array([7.8, 8.4, 6.9, 8.3, 8.1 , 5.0]),
+    'Reviews': np.array([200, 160, 130, 210, 180 , 120])
+}
+
+# Creating DataFrame
+movies_df = pd.DataFrame(data)
+
+# Basic Analysis Functions
+def popular_movies(df, top_n=6):
+    return df.sort_values(by='Reviews', ascending=False).head(top_n)
+
+def top_rated_genres(df):
+    return df.groupby('Genre')['Rating'].mean().sort_values(ascending=False)
+
+def trending_releases(df, top_n=6):
+    return df.sort_values(by='Rating', ascending=False).head(top_n)
+
+# Plotting Functions
+def plot_popular_movies(df):
+    plt.bar(df['Title'], df['Reviews'], color='skyblue')
+    plt.xlabel('Movies')
+    plt.ylabel('Number of Reviews')
+    plt.title('Popular Movies')
+    plt.xticks(rotation=45, ha='right')
+    plt.show()
+
+def plot_top_rated_genres(df):
+    df.plot(kind='bar', y='Rating', color='lightcoral')
+    plt.xlabel('Genres')
+    plt.ylabel('Average Rating')
+    plt.title('Top Rated Genres')
+    plt.show()
+
+def plot_trending_releases(df):
+    plt.bar(df['Title'], df['Rating'], color='lightgreen')
+    plt.xlabel('Movies')
+    plt.ylabel('Average Rating')
+    plt.title('Trending Releases')
+    plt.xticks(rotation=45, ha='right')
+    plt.show()
+
+def plot_overall_distribution(df):
+    # Pie chart for Genre Distribution
+    genre_counts = df['Genre'].value_counts()
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 3, 1)
+    plt.pie(genre_counts, labels=genre_counts.index, autopct='%1.1f%%', startangle=90, colors=['gold', 'lightcoral', 'lightskyblue', 'lightgreen'])
+    plt.axis('equal')
+    plt.title('Genre Distribution')
+
+    # Pie chart for Rating Distribution
+    plt.subplot(1, 3, 2)
+    plt.pie(df['Rating'].value_counts(), labels=df['Rating'].value_counts().index, autopct='%1.1f%%', startangle=90, colors=['lightcoral', 'lightskyblue', 'lightgreen', 'gold', 'lightpink'])
+    plt.axis('equal')
+    plt.title('Rating Distribution')
+
+    # Pie chart for Reviews Distribution
+    plt.subplot(1, 3, 3)
+    plt.pie(df['Reviews'].value_counts(), labels=df['Reviews'].value_counts().index, autopct='%1.1f%%', startangle=90, colors=['lightskyblue', 'lightgreen', 'gold', 'lightcoral', 'lightpink'])
+    plt.axis('equal')
+    plt.title('Reviews Distribution')
+
+    plt.tight_layout()
+    plt.show()
+
+# Example Usage
+popular_movies_df = popular_movies(movies_df)
+print("Popular Movies:")
+print(popular_movies_df)
+plot_popular_movies(popular_movies_df)
+
+top_rated_genres_df = top_rated_genres(movies_df)
+print("\nTop Rated Genres:")
+print(top_rated_genres_df)
+plot_top_rated_genres(top_rated_genres_df)
+
+trending_releases_df = trending_releases(movies_df)
+print("\nTrending Releases:")
+print(trending_releases_df)
+plot_trending_releases(trending_releases_df)
+
+# Overall Distribution
+plot_overall_distribution(movies_df)
